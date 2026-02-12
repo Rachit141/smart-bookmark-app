@@ -1,24 +1,38 @@
-📌 Smart Bookmark App
+🔖 Smart Bookmark App
 
-A simple full-stack bookmark manager built using Next.js (App Router) and Supabase.
+A minimal full-stack bookmark manager built with Next.js (App Router) and Supabase.
 
-Users can sign in with Google, create private bookmarks, and see real-time updates across tabs.
+Users can sign in using Google OAuth, create private bookmarks, and see real-time updates across multiple tabs.
 
-🚀 Live Demo
+🌐 Live Demo
 
-🔗 https://smart-bookmark-app.vercel.app
+👉 https://smart-bookmark-app.vercel.app
 
-(Replace with your actual deployed URL)
+(Test using any Google account)
+
+🧠 Features
+
+🔐 Google OAuth authentication (no email/password)
+
+➕ Add bookmarks (Title + URL)
+
+❌ Delete your own bookmarks
+
+🔒 Bookmarks are private per user (RLS enforced)
+
+⚡ Real-time updates across tabs
+
+🚀 Deployed on Vercel
 
 🛠 Tech Stack
 
-Next.js (App Router)
+Next.js 14 (App Router)
 
 Supabase
 
-Google OAuth Authentication
+Authentication
 
-PostgreSQL Database
+PostgreSQL
 
 Row Level Security (RLS)
 
@@ -28,137 +42,81 @@ Tailwind CSS
 
 Vercel (Deployment)
 
-✅ Features
+🔐 Security Implementation
 
-Google OAuth login (no email/password)
+Row Level Security (RLS) is enabled on the bookmarks table.
 
-Add bookmarks (Title + URL)
-
-Delete your own bookmarks
-
-Bookmarks are private per user
-
-Real-time updates across tabs
-
-Fully deployed on Vercel
-
-🔐 Authentication & Security
-
-Authentication is handled using Supabase Google OAuth.
-
-Row Level Security (RLS) is enabled on the bookmarks table to ensure:
+Policies ensure:
 
 Users can only view their own bookmarks
 
-Users can only insert bookmarks linked to their own user_id
+Users can only insert bookmarks with their own user_id
 
 Users can only delete their own bookmarks
 
-This guarantees proper data isolation between accounts.
+This guarantees strict user-level data isolation.
 
-🧩 Database Schema
+⚡ Realtime Logic
 
-Table: bookmarks
+Supabase Realtime is used to:
 
-Column	Type
-id	uuid (PK)
-title	text
-url	text
-user_id	uuid
-created_at	timestamp
-⚡ Realtime Implementation
+Listen to INSERT events
 
-Supabase Realtime subscriptions are used to:
+Listen to DELETE events
 
-Listen for INSERT events
+Update UI instantly without refresh
 
-Listen for DELETE events
+If two tabs are open and a bookmark is added in one, it appears automatically in the other.
 
-Automatically update UI without refresh
+🗄 Database Schema
+bookmarks
+---------
+id          uuid (primary key)
+title       text
+url         text
+user_id     uuid
+created_at  timestamp
 
-If two tabs are open and a bookmark is added in one, it appears instantly in the other.
+🧩 Challenges Faced
+1. Google OAuth Redirect Mismatch
 
-🧠 Challenges Faced
-1️⃣ Google OAuth Redirect URI Mismatch
-
-Initially faced redirect_uri_mismatch errors due to incorrect callback URLs between:
-
-Supabase
+Initially faced redirect_uri_mismatch errors due to incorrect configuration between:
 
 Google Cloud Console
 
-Localhost
+Supabase Auth settings
 
-Vercel production URL
+Localhost & Vercel domains
 
-Resolved by carefully aligning:
+Resolved by aligning all authorized redirect URLs correctly.
 
-Authorized redirect URIs
+2. Row Level Security Setup
 
-Supabase Auth callback URL
+Ensuring proper RLS policies while maintaining realtime functionality required careful policy design using auth.uid().
 
-Vercel production domain
+3. Production Environment Variables
 
-2️⃣ Row Level Security Configuration
+Had to configure environment variables correctly in Vercel for authentication to work in production.
 
-Ensuring that:
-
-Users could not access other users’ bookmarks
-
-Realtime still worked properly
-
-Insert/delete policies remained secure
-
-Proper policies were written using auth.uid() to enforce ownership.
-
-3️⃣ Environment Variables in Vercel
-
-Had to properly configure:
-
-NEXT_PUBLIC_SUPABASE_URL
-NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-
-in Vercel dashboard to make production authentication work correctly.
-
-📦 Local Setup
-
-Clone the repository
-
+🏃 Local Setup
 git clone https://github.com/Rachit141/smart-bookmark-app.git
-
-
-Install dependencies
-
+cd smart-bookmark-app
 npm install
 
 
-Create .env.local
+Create .env.local:
 
-NEXT_PUBLIC_SUPABASE_URL=your_url
-NEXT_PUBLIC_SUPABASE_ANON_KEY=your_key
+NEXT_PUBLIC_SUPABASE_URL=your_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_anon_key
 
 
-Run the project
+Run:
 
 npm run dev
 
-🌍 Deployment
+🚀 Deployment
 
-Deployed using Vercel.
-Production environment variables were configured in the Vercel dashboard.
-
-🔮 Improvements (Future Scope)
-
-Bookmark editing feature
-
-URL validation
-
-Loading and error states
-
-UI polish and animations
-
-Basic testing setup
+Deployed using Vercel with production environment variables configured securely in dashboard settings.
 
 👤 Author
 
